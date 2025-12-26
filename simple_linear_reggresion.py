@@ -5,12 +5,12 @@ from sklearn import linear_model
 from sklearn.metrics import r2_score
 
 Co2_df = pd.read_csv("./machine_learning_with_python_jadi-main/FuelConsumption.csv")
-print(Co2_df)
-print(Co2_df.describe())
+# print(Co2_df)
+# print(Co2_df.describe())
 
 Useful_valueCo2_df = Co2_df[["MODELYEAR", "ENGINESIZE", "CYLINDERS", "FUELCONSUMPTION_COMB", "CO2EMISSIONS"]]
 
-print(Useful_valueCo2_df.query("ENGINESIZE >= 8"))
+# print(Useful_valueCo2_df.query("ENGINESIZE >= 8"))
 
 # Useful_valueCo2_df.plot(kind="scatter", x="ENGINESIZE", xlabel="ENGINESIZE", y="CO2EMISSIONS", ylabel="CO2EMISSIONS",title="ENGINESIZE vs CO2EMISSIONS")
 
@@ -57,6 +57,8 @@ print("mean absolute error(MAE):",np.mean(np.absolute(test_y_pred - test_y)))
 print("mean squared error(MSE):",np.mean(np.absolute(test_y_pred - test_y)**2))
 print("R2_score:",r2_score(test_y, test_y_pred))
 
-plt.show()
+# plt.show()
 # simple_linear_reggresion.py
+# test
+print(regr.predict(np.array([3]).reshape(1, -1)))
 
