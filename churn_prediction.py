@@ -33,29 +33,32 @@ preprocessing=ColumnTransformer([
     ("numeric",numeric_pipe,features.columns)
 ])
 
-# """finding best model """
-# modles={
-#     "knn":KNeighborsClassifier(),
-#     "tree":DecisionTreeClassifier(),
-#     "randoForest":RandomForestClassifier(n_estimators=200,random_state=40),
-#     "logistic":LogisticRegression()
-#     }
-# cv=KFold(n_splits=5,shuffle=True,random_state=40)
+"""finding best model """
+modles={
+    "knn":KNeighborsClassifier(),
+    "tree":DecisionTreeClassifier(),
+    "randoForest":RandomForestClassifier(n_estimators=200,random_state=40),
+    "logistic":LogisticRegression()
+    }
+cv=KFold(n_splits=5,shuffle=True,random_state=40)
 
-# result={}
+result={}
 
-# for name,model in modles.items():
-#     pipe=Pipeline([
-#     ("preprocess",preprocessing),
-#     ("model",model)
-# ])  
-#     scores=cross_val_score(pipe,features,target,scoring="accuracy",cv=cv)
+for name,model in modles.items():
+    pipe=Pipeline([
+    ("preprocess",preprocessing),
+    ("model",model)
+])  
+    scores=cross_val_score(pipe,features,target,scoring="accuracy",cv=cv)
 
-#     result[name]=(scores.mean(),scores.std())
+    result[name]=(scores.mean(),scores.std())
     
 
-# for model,(mean,std) in result.items():
-#     print(f"{model}: accuracy = {mean:.4f} ± {std:.4f}")
+for model,(mean,std) in result.items():
+    print(f"{model}: accuracy = {mean:.4f} ± {std:.4f}")
+  
+    
+"""model training and evaluation"""
 
 pipe=Pipeline([
     ("preprocessing",preprocessing),
