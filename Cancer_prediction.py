@@ -29,7 +29,7 @@ for col in df.columns:
 feauters=df.drop("Class",axis=1)
 target=df["Class"]
 
-x_train,x_test,y_train,y_test=train_test_split(feauters,target,test_size=0.2,random_state=40)
+x_train,x_test,y_train,y_test=train_test_split(feauters,target,test_size=0.2,random_state=40,stratify=target)
 
 preprocess_pipline=Pipeline([
     ("imputer",SimpleImputer(strategy="most_frequent")),
@@ -40,30 +40,31 @@ coltransform=ColumnTransformer([
     ("numeric",preprocess_pipline,feauters.columns)
 ])
 
-# """finding best model """
-# modles={
-#     "knn":KNeighborsClassifier(),
-#     "tree":DecisionTreeClassifier(),
-#     "randoForest":RandomForestClassifier(n_estimators=200,random_state=40),
-#     "logistic":LogisticRegression()
-#     }
-# cv=KFold(n_splits=5,shuffle=True,random_state=40)
+"""finding best model """
+modles={
+    "knn":KNeighborsClassifier(),
+    "tree":DecisionTreeClassifier(),
+    "randoForest":RandomForestClassifier(n_estimators=200,random_state=40),
+    "logistic":LogisticRegression()
+    }
+cv=KFold(n_splits=5,shuffle=True,random_state=40)
 
-# result={}
+result={}
 
-# for name,model in modles.items():
-#     pipe=Pipeline([
-#     ("preprocess",coltransform),
-#     ("model",model)
-# ])  
-#     scores=cross_val_score(pipe,feauters,target,scoring="accuracy",cv=cv)
+for name,model in modles.items():
+    pipe=Pipeline([
+    ("preprocess",coltransform),
+    ("model",model)
+])  
+    scores=cross_val_score(pipe,feauters,target,scoring="accuracy",cv=cv)
 
-#     result[name]=(scores.mean(),scores.std())
+    result[name]=(scores.mean(),scores.std())
     
 
-# for model,(mean,std) in result.items():
-#     print(f"{model}: accuracy = {mean:.4f} ± {std:.4f}")
+for model,(mean,std) in result.items():
+    print(f"{model}: accuracy = {mean:.4f} ± {std:.4f}")
 
+"""model training and evaluation"""
 
 pipe=Pipeline([
 ("preprocess",coltransform),
@@ -75,6 +76,9 @@ y_predict=model.predict(x_test)
 print(f"f1score is : {f1_score(y_test,y_predict,pos_label=4)}")
 print(f"accuracy is : {accuracy_score(y_test,y_predict)}")
 print(f"confusion_matrix is : {confusion_matrix(y_test,y_predict)}")
+
+"""Medical note"""
+# The model was able to identify malignant cases with a high F1-score, which is important for reducing diagnostic errors.
 
 
 
