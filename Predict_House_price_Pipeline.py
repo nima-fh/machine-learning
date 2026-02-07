@@ -7,7 +7,7 @@ from sklearn.preprocessing import StandardScaler,FunctionTransformer,OneHotEncod
 from sklearn.linear_model import LinearRegression,Ridge
 from sklearn.ensemble import RandomForestRegressor,GradientBoostingRegressor
 from sklearn.pipeline import Pipeline
-from sklearn.metrics import r2_score
+from sklearn.metrics import r2_score,mean_squared_error
 from sklearn.compose import ColumnTransformer,TransformedTargetRegressor
 import joblib
 
@@ -53,33 +53,33 @@ preprocessing=ColumnTransformer([
 ])
 
 """finding best model """
-# modles={
-#     "linear":LinearRegression(),
-#     "ridge":Ridge(),
-#     "randoForest":RandomForestRegressor(n_estimators=200,random_state=40),
-#     "boost":GradientBoostingRegressor(n_estimators=300,max_depth=4,learning_rate=0.05,random_state=40)
-#     }
-# cv=KFold(n_splits=5,shuffle=True,random_state=40)
+modles={
+    "linear":LinearRegression(),
+    "ridge":Ridge(),
+    "randoForest":RandomForestRegressor(n_estimators=200,random_state=40),
+    "boost":GradientBoostingRegressor(n_estimators=300,max_depth=4,learning_rate=0.05,random_state=40)
+    }
+cv=KFold(n_splits=5,shuffle=True,random_state=40)
 
-# result={}
+result={}
 
-# for name,model in modles.items():
-#     pipe=Pipeline([
-#     ("preprocess",preprocessing),
-#     ("model",model)
-# ])  
-#     final_model=TransformedTargetRegressor(
-#     regressor=pipe,
-#     func=np.log1p,
-#     inverse_func=np.expm1
-# )
-#     scores=cross_val_score(final_model,features,target,scoring="r2",cv=cv)
+for name,model in modles.items():
+    pipe=Pipeline([
+    ("preprocess",preprocessing),
+    ("model",model)
+])  
+    final_model=TransformedTargetRegressor(
+    regressor=pipe,
+    func=np.log1p,
+    inverse_func=np.expm1
+)
+    scores=cross_val_score(final_model,features,target,scoring="r2",cv=cv)
 
-#     result[name]=(scores.mean(),scores.std())
+    result[name]=(scores.mean(),scores.std())
     
 
-# for model,(mean,std) in result.items():
-#     print(f"{model}: R2 = {mean:.4f} ± {std:.4f}")
+for model,(mean,std) in result.items():
+    print(f"{model}: R2 = {mean:.4f} ± {std:.4f}")
 
 
 pipe=Pipeline([
@@ -98,8 +98,8 @@ y_pred=final_model.predict(x_test)
 
 """score"""
 print("R2_score is: ",r2_score(y_test,y_pred))
+print("MSE is: ",mean_squared_error(y_test,y_pred))
 
 joblib.dump(final_model,"housing_model.pkl")
 # load=joblib.load("housing_model.pkl")
 # print(load)
-
